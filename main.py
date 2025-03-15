@@ -22,6 +22,7 @@ def main():
         wordsheet = destination_sheet.worksheet("Sheet1")
         wordsheet.clear()  # Xóa dữ liệu cũ
         wordsheet.update("A1", data)  # Ghi dữ liệu từ A1
+        handler.sort_sheet(wordsheet,0)
         handler.apply_formula_to_cells(wordsheet,"AC")
         handler.update_sheet2()
         print("Dữ liệu từ nhiều Google Sheet đã được sao chép thành công!")
