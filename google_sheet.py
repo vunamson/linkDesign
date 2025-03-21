@@ -321,9 +321,22 @@ class GoogleSheetHandler:
         # ✅ Chuyển đổi giá trị ngày tháng thành `datetime`
         def parse_date(value):
             try:
-                return datetime.strptime(value, "%Y-%m-%d %H:%M:%S")  # Định dạng ngày chính xác
-            except ValueError:
-                return datetime.min  # Nếu lỗi, đưa về ngày nhỏ nhất (để xếp cuối)
+        # Nếu dùng khoảng trắng thay vì 'T'
+                if " " in value:
+                    value = value.replace(" ", "T")
+                # Nếu giờ < 10 mà không có 0, thì chuẩn hóa lại giờ phút giây thành 2 chữ số
+                date_part, time_part = value.split("T")
+                time_parts = time_part.split(":")
+                if len(time_parts[0]) == 1:
+                    time_parts[0] = time_parts[0].zfill(2)  # Thêm số 0 trước giờ nếu cần
+                if len(time_parts[1]) == 1:
+                    time_parts[1] = time_parts[1].zfill(2)
+                if len(time_parts[2]) == 1:
+                    time_parts[2] = time_parts[2].zfill(2)
+                value = f"{date_part}T{':'.join(time_parts)}"
+                return datetime.fromisoformat(value)
+            except Exception:
+                return datetime.min
 
         # ✅ Sắp xếp dữ liệu theo ngày (mới nhất -> cũ nhất)
         sorted_data = sorted(data[1:], key=lambda x: parse_date(x[sort_col]), reverse=True)
