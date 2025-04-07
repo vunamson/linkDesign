@@ -1,4 +1,5 @@
 from datetime import datetime
+from collections import defaultdict
 import gspread
 import re
 from oauth2client.service_account import ServiceAccountCredentials
@@ -75,6 +76,7 @@ class GoogleSheetHandler:
                         return row[16]  # Trả về link từ cột Q
                     break
 
+
             # 🔹 Nếu không tìm thấy, kiểm tra trong Sheet 'CN'
             # cn_sheet = sheet.worksheet("CN")
             # cn_data = cn_sheet.get_all_values()
@@ -111,6 +113,78 @@ class GoogleSheetHandler:
             print(f"❌ Lỗi khi tìm Link template cho SKU {sku} : {e}")
 
         return ""  # Không tìm thấy, trả về chuỗi rỗng
+    
+    def generate_sheet3(self):    
+        try:
+            sheet1, _ = self.get_sheets()
+            data = sheet1.get_all_values()
+            if len(data) <= 1:
+                print("⚠️ Sheet1 không có đủ dữ liệu.")
+                return
+
+            headers = data[0]
+            idx_order_date = headers.index("Order Date")
+            idx_store = headers.index("Store Name")
+            idx_order_id = headers.index("Order ID")
+            idx_order_status = headers.index("Order Status")
+            idx_link_url = headers.index("Link ULR")
+            idx_quantity = headers.index("Quantity")
+            idx_unit_cost = headers.index("Unit Cost")
+            idx_total_cost = headers.index("Total cost")
+            idx_shipping_total = headers.index("Shipping Total")
+            idx_order_total = headers.index("Order Total")
+
+            # ✅ Group by date -> store
+            grouped = defaultdict(lambda: defaultdict(list))
+
+            for row in data[1:]:
+                if row[idx_order_status].lower() == "failed":
+                    continue
+                raw_date = row[idx_order_date].split("T")[0].split(" ")[0]
+                store = row[idx_store]
+                grouped[raw_date][store].append([
+                    row[idx_order_id],
+                    row[idx_order_status],
+                    row[idx_link_url],
+                    row[idx_quantity],
+                    row[idx_unit_cost],
+                    row[idx_total_cost],
+                    row[idx_shipping_total],
+                    row[idx_order_total],
+                ])
+
+            # ✅ Chuẩn bị dữ liệu Sheet3
+            output = [["Order Date", "Store Name", "Order ID", "Order Status", "Link URL", "Quantity", "Unit Cost", "Total Cost", "Shipping Total", "Order Total"]]
+
+            for date in sorted(grouped.keys(), reverse=True):
+                stores = grouped[date]
+                date_str = f"ngày {datetime.strptime(date, '%Y-%m-%d').strftime('%d/%m')}"
+                output.append([date_str])  # dòng hiển thị ngày
+                for store in stores:
+                    output.append(["", store])  # dòng hiển thị store
+                    total = 0
+                    for order in stores[store]:
+                        try:
+                            total += float(order[7])
+                        except:
+                            pass
+                        output.append(["", "", *order])
+                    output.append(["", "", "", "", "", "", "", "", "", f"Tổng tiền {store} trong ngày", f"{total:.2f}"])
+                output.append([])  # dòng trống phân cách ngày
+
+            # ✅ Ghi vào Sheet3
+            sheet = self.client.open_by_key(self.sheet_id)
+            if "Sheet3" in [ws.title for ws in sheet.worksheets()]:
+                sheet3 = sheet.worksheet("Sheet3")
+                sheet3.clear()
+            else:
+                sheet3 = sheet.add_worksheet(title="Sheet3", rows="1000", cols="15")
+
+            sheet3.update("A1", output)
+            print("✅ Đã tạo Sheet3 đúng định dạng thiết kế chuẩn như ảnh bạn gửi.")
+
+        except Exception as e:
+            print(f"❌ Lỗi khi tạo Sheet3: {e}")
     
 
     def extract_slug(self,url):

@@ -6,7 +6,7 @@ def main():
     source_sheet_ids = ["1iU5kAhVSC0pIP2szucrTm4PaplUh501H2oUvLgx0mw8",
         "1cGF0JBFX1dkTq_56-23IblzLKpdqgVkPxNb-ZX5-sQA",
         "1j5VHpm1g3hlXK-HncynZNybubWLLmlsWt-rK5ws9UFM",
-        "1CmmjO1NVG8hRe6YaurCHT4Co3GhSw39ABIwwTcv4sHw",
+        # "1CmmjO1NVG8hRe6YaurCHT4Co3GhSw39ABIwwTcv4sHw",
         "1oTKNUs_3XRJ7GD4C8q5ay-1JjRub2wKdOF1HDFSXEo8",
         # "15sEghfR8L-_leRNhSz62K--jtWFZPn-ix6BH0MuLIB0" 
     ]  # Danh sách ID sheet nguồn
@@ -25,6 +25,7 @@ def main():
         handler.sort_sheet(wordsheet,0)
         handler.apply_formula_to_cells(wordsheet,"AC")
         handler.update_sheet2()
+        handler.generate_sheet3()
         print("Dữ liệu từ nhiều Google Sheet đã được sao chép thành công!")
     else:
         print("Không có dữ liệu để sao chép.")
