@@ -51,6 +51,18 @@ class GoogleSheetHandler:
 
         return all_data  # Trả về tất cả dữ liệu đã thu thập
     
+    def link_design_hog(seft,order_id,data_design_hog):
+        try :
+            for row in data_design_hog :
+                if len(row) > 4 and row[4] == order_id :
+                    if len(row) > 20 : return row[20]
+                    break
+        except Exception as e:
+            print(f"❌ Lỗi khi tìm Link Design cho Order ID {order_id}: {e}")
+
+        return ""  # Không tìm thấy, trả về chuỗi rỗng
+        
+    
     def link_design_mf(self,order_id,shoes_data,cn_data) :
         """
         Lấy link thiết kế từ Google Sheet với ID 1Y_EnKwWThJaxLaLQyAWGojCjcahJscZPCve5qHbwGIs.
@@ -102,7 +114,19 @@ class GoogleSheetHandler:
         except Exception as e:
             print(f"❌ Lỗi khi cập nhật ô ({row}, {col}): {e}")
 
-    def check_link_template(self,sheet_data,sku) :
+    def check_link_template_hog(self,sheet_data,sku) :
+        try:
+            for row in sheet_data:
+                if row[0] == sku and sku and row[0] :
+                    return row[1]                
+            return ""
+
+        except Exception as e:
+            print(f"❌ Lỗi khi tìm Link template cho SKU {sku} : {e}")
+
+        return ""  # Không tìm thấy, trả về chuỗi rỗng
+
+    def check_link_template_mf(self,sheet_data,sku) :
         try:
             for row in sheet_data:
                 if row[0] == sku and sku and row[0] :
@@ -188,7 +212,7 @@ class GoogleSheetHandler:
     
 
     def extract_slug(self,url):
-        remove_words = {"luxinshoes", "davidress", "onesimpler", "xanawood", "lovasuit", "luxinhoes"}
+        remove_words = {"luxinshoes", "davidress", "onesimpler", "xanawood", "lovasuit", "luxinhoes","clomic"}
         # Bước 1: Trích xuất phần slug từ URL
         match = re.search(r'/product/([\w-]+?)(?:-\d+)?/$', url)  
         if not match:
@@ -223,33 +247,57 @@ class GoogleSheetHandler:
             headers = data[0]
             try:
                 col_K_idx = headers.index("Link ULR")  # Cột K
-                col_L_idx = headers.index("Link Template")  # Cột L
-                col_N_idx = headers.index("Link Design")  # Cột N
+                col_N_idx = headers.index("Check Design")  # Cột K
+
+                col_L_idx = headers.index("Link Template Hog")  # Cột L
+                col_M_idx = headers.index("Link Template MF")  # Cột M
+                
+                col_O_idx = headers.index("Link Design Hog")  # Cột N
+                col_P_idx = headers.index("Link Design MF")  # Cột N
+
                 # col_M_idx = headers.index("Check Design") #cột M
             except ValueError:
                 print("❌ Không tìm thấy cột K, L hoặc N trong sheet.")
                 return
 
             # Duyệt từ trên xuống để kiểm tra
-            updates = []
+            updates_mf = []
+            updates_hog = []
+            for i in range(1, len(data) - 1):  # Bỏ qua dòng tiêu đề
+                K_value = self.extract_slug(data[i][col_K_idx]) 
+                M_value = data[i][col_M_idx]
+                if not data[i][col_N_idx] :        
+                    for j in range(i + 1, len(data)):  # Kiểm tra các hàng bên dưới
+                        if self.extract_slug(data[j][col_K_idx])  == K_value and data[j][col_M_idx] == M_value:
+                            if data[j][col_P_idx]:  # Nếu cột N của hàng bên dưới có giá trị
+                                updates_mf.append((i + 1, col_P_idx + 1, data[j][col_P_idx]))  # Lưu cập nhật
+                                break
+
             for i in range(1, len(data) - 1):  # Bỏ qua dòng tiêu đề
                 K_value = self.extract_slug(data[i][col_K_idx]) 
                 L_value = data[i][col_L_idx]
-                print('data' , i,'----', K_value,L_value )
+
                 if not data[i][col_N_idx] :        
                     for j in range(i + 1, len(data)):  # Kiểm tra các hàng bên dưới
                         if self.extract_slug(data[j][col_K_idx])  == K_value and data[j][col_L_idx] == L_value:
-                            if data[j][col_N_idx]:  # Nếu cột N của hàng bên dưới có giá trị
-                                updates.append((i + 1, col_N_idx + 1, data[j][col_N_idx]))  # Lưu cập nhật
+                            if data[j][col_O_idx]:  # Nếu cột N của hàng bên dưới có giá trị
+                                updates_hog.append((i + 1, col_O_idx + 1, data[j][col_O_idx]))  # Lưu cập nhật
                                 break
 
             # Thực hiện cập nhật vào Google Sheet
-            if updates:
-                batch_update_requests = [
-                    {"range": f"N{row}", "values": [[value]]} for row, _, value in updates
+            if updates_mf:
+                batch_update_requests_mf = [
+                    {"range": f"P{row}", "values": [[value]]} for row, _, value in updates_mf
                 ]
-                sheet.batch_update(batch_update_requests)
-                print(f"✅ Đã cập nhật {len(updates)} hàng trong cột N.")
+                sheet.batch_update(batch_update_requests_mf)
+                print(f"✅ Đã cập nhật {len(updates_mf)} hàng trong cột N.")
+
+            if updates_hog:
+                batch_update_requests_hog = [
+                    {"range": f"O{row}", "values": [[value]]} for row, _, value in updates_hog
+                ]
+                sheet.batch_update(batch_update_requests_hog)
+                print(f"✅ Đã cập nhật {len(updates_hog)} hàng trong cột N.")
 
             else:
                 print("⚠️ Không có hàng nào cần cập nhật.")
@@ -284,16 +332,23 @@ class GoogleSheetHandler:
             print("❌ Không tìm thấy một hoặc nhiều cột cần thiết.")
             return
         print('-------------------')
-        design_sheet = self.client.open_by_key("1Y_EnKwWThJaxLaLQyAWGojCjcahJscZPCve5qHbwGIs")
-        shoes_sheet = design_sheet.worksheet("Shoes")
+        design_sheet_mf = self.client.open_by_key("1Y_EnKwWThJaxLaLQyAWGojCjcahJscZPCve5qHbwGIs")
+        shoes_sheet = design_sheet_mf.worksheet("Shoes")
         shoes_data = shoes_sheet.get_all_values()
-        cn_sheet = design_sheet.worksheet("CN")
+        cn_sheet = design_sheet_mf.worksheet("CN")
         cn_data = cn_sheet.get_all_values()
 
-        template_sheet = self.client.open_by_key("1Uw8FQVI2ef4ANZX8pEPEO19oDSrJBzpnRIIGcV7kmUM")
-        sheet_template = template_sheet.worksheet("Sheet1")
-        data_template = sheet_template.get_all_values()
+        template_sheet_mf = self.client.open_by_key("1Uw8FQVI2ef4ANZX8pEPEO19oDSrJBzpnRIIGcV7kmUM")
+        sheet_template = template_sheet_mf.worksheet("Sheet1")
+        data_template_mf = sheet_template.get_all_values()
 
+        design_sheet_hog = self.client.open_by_key("1jDZbTZzUG-_Sw3NXgKMjRa5YD9V3PjMkLlx78-w688Y")
+        shee1_sheet_hog = design_sheet_hog.worksheet("3D(BY SELLER)")
+        data_design_hog = shee1_sheet_hog.get_all_values()
+
+        template_sheet_hog = self.client.open_by_key("1ctlPBJ6NvS2z59lJqHeNYyIvk3k1YSISO7CdIas0xjA")
+        sheet1_template_hog = template_sheet_hog.worksheet("Sheet1")
+        data_template_hog = sheet1_template_hog.get_all_values()
         # ✅ Lưu vào dictionary để tra cứu nhanh hơn
         if len(data2) <=1 :
                 new_data = []
@@ -317,13 +372,15 @@ class GoogleSheetHandler:
                 self.apply_formula_to_cells(sheet2,"J")
                 return
         else : 
-            dest_order_map = {}
+            dest_order_map_mf = {}
             for j in range(1,len(data2)) :
                 dest_order_id = data2[j][1]
-                dest_link_design = data2[j][13]
-                dest_check_design = data2[j][12]
+                dest_check_design = data2[j][13]
+                dest_link_design_mf = data2[j][14]
                 if dest_order_id:
-                    dest_order_map[dest_order_id] = {"row" : j +1 ,"Link Design" : dest_link_design,"Check Design":dest_check_design }
+                    dest_order_map_mf[dest_order_id] = {"row" : j +1 ,"Link Design" : dest_link_design_mf,"Check Design":dest_check_design }
+            # dest_link_design_hog = data2[j][13]
+
             new_rows = []
             updated_rows = []
             for i in range(1, len(data1)):
@@ -339,26 +396,30 @@ class GoogleSheetHandler:
                 type = row[type_idx]
                 link_image = row[link_image_idx]
                 link_url = row[link_url_idx]
-                if order_id in dest_order_map :
-                    dest_row_index = dest_order_map[order_id]["row"]
-                    dest_link_design = dest_order_map[order_id]["Link Design"]
-                    dest_check_design = dest_order_map[order_id]["Check Design"]
-                    link_design = self.link_design_mf(order_id,shoes_data,cn_data)
-                    if link_design and (link_design != dest_link_design or not dest_check_design): 
-                        updated_rows.append({"row" : dest_row_index, "value" : link_design})
+                if order_id in dest_order_map_mf :
+                    dest_row_index = dest_order_map_mf[order_id]["row"]
+                    dest_check_design = dest_order_map_mf[order_id]["Check Design"]
+
+                    # dest_link_design_mf = dest_order_map_mf[order_id]["Link Design MF"]
+                    # dest_link_design_hog = dest_order_map_mf[order_id]["Link Design Hog"]
+
+                    link_design_mf = self.link_design_mf(order_id,shoes_data,cn_data)
+                    link_design_hog = self.link_design_hog(order_id,data_design_hog)
+                    if (link_design_mf or link_design_hog) and not dest_check_design: 
+                        updated_rows.append({"row" : dest_row_index,"value_hog" : link_design_hog,"value_mf" : link_design_mf })
                 else : 
                     if order_status != "failed" and sku != "AODAU":
-                        link_design = self.link_design_mf(order_id,shoes_data,cn_data)
-                        check_design = "da ff" if link_design else '' 
-                        new_rows.append([order_date,order_id,note,custom_name,custom_number,sku,store,type ,link_image,"",link_url,"",check_design,link_design])
+                        link_design_hog = self.link_design_mf(order_id,shoes_data,cn_data)
+                        link_design_mf = self.link_design_mf(order_id,shoes_data,cn_data)
+                        check_design = "da ff" if link_design_hog or link_design_mf else '' 
+                        new_rows.append([order_date,order_id,note,custom_name,custom_number,sku,store,type ,link_image,"",link_url,"","",check_design,link_design_hog,link_design_mf])
             update_requests = []
             for update in updated_rows:
                 update_requests.append({
-                    "range": f"M{update['row']}:N{update['row']}",  # Cập nhật cả cột M và N
-                    "values": [["da ff", update["value"]]]
-                    # "range": f"N{update['row']}",  # Cột "N" = cột 14
-                    # "values": [[update["value"]]]
+                    "range": f"N{update['row']}:P{update['row']}",  # ✅ Từ cột N đến P (3 cột liền nhau)
+                    "values": [["da ff", update["value_hog"], update["value_mf"]]]
                 })
+
             sheet2.batch_update(update_requests)
             if new_rows :
                 sheet2.append_rows(new_rows)
@@ -367,19 +428,39 @@ class GoogleSheetHandler:
             self.apply_formula_to_cells(sheet2,"J")
         sheet1Update, sheet2Update = self.get_sheets()
         data2update = sheet2Update.get_all_values()
-        update_template = []
+        update_template_hog = []
+        update_template_mf = []
         for i in range(1,len(data2update)) : 
+            if '-' in data2update[i][5]:
+                parts = data2update[i][5].split('-', 1)  # chỉ tách 1 lần
+                sku_hog = parts[0].strip()
+                sku_mf = parts[1].strip()
+            else :
+                sku_hog = data2update[i][5] 
+                sku_mf = data2update[i][5] 
             if  not data2update[i][11] : 
-                link_template = self.check_link_template(data_template,data2update[i][5])
-                if(link_template) : 
-                    update_template.append({
+                link_template_hog = self.check_link_template_hog(data_template_hog,sku_hog)
+                if(link_template_hog) : 
+                    update_template_hog.append({
                         "range": f"L{i+1}",  # Cột 12 (L)
-                        "values": [[link_template]]
+                        "values": [[link_template_hog]]
                     })
 
-                if not data2update[i][13] : pass
-        if update_template : 
-            sheet2Update.batch_update(update_template)
+                # if not data2update[i][13] : pass
+            
+            if  not data2update[i][12] : 
+                link_template_mf = self.check_link_template_mf(data_template_mf,sku_mf)
+                if(link_template_mf) : 
+                    update_template_mf.append({
+                        "range": f"M{i+1}",  # Cột 12 (M)
+                        "values": [[link_template_mf]]
+                    })
+
+                # if not data2update[i][13] : pass
+        if update_template_hog : 
+            sheet2Update.batch_update(update_template_hog)
+        if update_template_mf : 
+            sheet2Update.batch_update(update_template_mf)
         self.update_link_design(sheet2Update)
 
     def sort_sheet(self, sheet, sort_col):
