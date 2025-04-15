@@ -176,7 +176,6 @@ class GoogleSheetHandler:
                     row[idx_shipping_total],
                     row[idx_order_total],
                 ])
-
             # ✅ Chuẩn bị dữ liệu Sheet3
             output = [["Order Date", "Store Name", "Order ID", "Order Status", "Link URL", "Quantity", "Unit Cost", "Total Cost", "Shipping Total", "Order Total"]]
 
