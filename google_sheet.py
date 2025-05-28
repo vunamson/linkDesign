@@ -1,26 +1,83 @@
 from datetime import datetime
 from collections import defaultdict
+import time
 import gspread
 import re
-from oauth2client.service_account import ServiceAccountCredentials
+from httplib2 import Credentials
+from googleapiclient.discovery import build
+from google.oauth2 import service_account
+# from oauth2client.service_account import ServiceAccountCredentials
+from gspread_formatting import set_row_heights # 🌟 Danh sách WooCommerce Stores & Google Sheets
 
 class GoogleSheetHandler:
     def __init__(self, sheet_id):
         """Khởi tạo với ID Google Sheet"""
         self.sheet_id = sheet_id
         # self.client = gspread.Client(auth=None)  # Không cần xác thực, chỉ truy cập Google Sheet công khai
-        self.client = self.authenticate_google_sheets()
+        self.client, self.service = self.authenticate_google_sheets()
 
     def authenticate_google_sheets(self):
         """Xác thực Google Sheets API"""
         scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-        creds = ServiceAccountCredentials.from_json_keyfile_name(r"C:\Lay_link\linkDesign\credentials.json", scope)
-        return gspread.authorize(creds)
+        # creds = ServiceAccountCredentials.from_json_keyfile_name(r"C:\Lay_link\linkDesign\credentials.json", scope)
+        creds = service_account.Credentials.from_service_account_file(
+            r"C:\Lay_link\linkDesign\credentials.json",
+            scopes=scope
+        )
+        # client = gspread.authorize(creds)
+
+        # Google API client để gọi batchUpdate (insert rows...)
+        client = gspread.authorize(creds)
+        service = build('sheets', 'v4', credentials=creds)
+        return client,service
+
 
     def get_sheets(self):
         """Truy xuất Sheet1 và Sheet2 từ Google Sheets"""
         sheet = self.client.open_by_key(self.sheet_id)
         return sheet.worksheet("Sheet1"), sheet.worksheet("Sheet2")
+    
+
+    def add_rows_on_top(self, sheet_title, data_to_add):
+        """
+        Chèn số hàng = len(data_to_add) sau header (hàng 1) của sheet rồi ghi dữ liệu mới vào.
+
+        :param sheet_title: Tên sheet (ví dụ "FF")
+        :param data_to_add: List[List], dữ liệu mới cần thêm (dạng list các hàng)
+        """
+        ss = self.service.spreadsheets()
+        # Lấy sheetId theo tên sheet
+        spreadsheet = ss.get(spreadsheetId=self.sheet_id).execute()
+        sheet_id = None
+        for sheet in spreadsheet['sheets']:
+            if sheet['properties']['title'] == sheet_title:
+                sheet_id = sheet['properties']['sheetId']
+                break
+        if sheet_id is None:
+            raise Exception(f"Sheet '{sheet_title}' không tồn tại!")
+
+        num_rows_to_insert = len(data_to_add)
+
+        # Tạo request chèn hàng trống ngay dưới header (startIndex=1)
+        requests = [{
+            "insertDimension": {
+                "range": {
+                    "sheetId": sheet_id,
+                    "dimension": "ROWS",
+                    "startIndex": 1,
+                    "endIndex": 1 + num_rows_to_insert
+                },
+                "inheritFromBefore": True
+            }
+        }]
+        body = {'requests': requests}
+        ss.batchUpdate(spreadsheetId=self.sheet_id, body=body).execute()
+
+        # Ghi dữ liệu mới vào vùng vừa chèn
+        sheet = self.client.open_by_key(self.sheet_id).worksheet(sheet_title)
+        sheet.update(f"A2", data_to_add)
+
+        print(f"✅ Đã chèn {num_rows_to_insert} hàng mới lên đầu sheet '{sheet_title}' và cập nhật dữ liệu.")
     
     
     
@@ -142,6 +199,7 @@ class GoogleSheetHandler:
         try:
             sheet1, _ = self.get_sheets()
             data = sheet1.get_all_values()
+            time.sleep(60)
             if len(data) <= 1:
                 print("⚠️ Sheet1 không có đủ dữ liệu.")
                 return
@@ -201,14 +259,121 @@ class GoogleSheetHandler:
                 sheet3 = sheet.worksheet("Sheet3")
                 sheet3.clear()
             else:
-                sheet3 = sheet.add_worksheet(title="Sheet3", rows="1000", cols="15")
+                sheet3 = sheet.add_worksheet(title="Sheet3", rows="10000", cols="15")
 
             sheet3.update("A1", output)
             print("✅ Đã tạo Sheet3 đúng định dạng thiết kế chuẩn như ảnh bạn gửi.")
 
         except Exception as e:
             print(f"❌ Lỗi khi tạo Sheet3: {e}")
+
+    def copy_all_data_sheet2(self, sheet_ids):
+        """Lấy dữ liệu từ Sheet2 của danh sách các Google Sheet"""
+        all_data = []
+        for sheet_id in sheet_ids:
+            try:
+                sheet = self.client.open_by_key(sheet_id)
+                sheet_name = sheet.title
+                worksheet = sheet.worksheet("Sheet2")
+                data = worksheet.get_all_values()
+                if data:
+                    if not all_data:
+                        data[0].append("Store Name")
+                        for row in data[1:]: row.append(sheet_name)
+                    else:
+                        data.pop(0)
+                        for row in data: row.append(sheet_name)
+                all_data.extend(data)
+            except Exception as e:
+                print(f"Lỗi khi lấy dữ liệu từ sheet2 {sheet_id}: {e}")
+        return all_data
     
+    def generate_sheet4(self,sheet2_data):
+        """Tạo Sheet4: copy cột Order Date, Order ID, Custom Number, Store Name và cập nhật Status Checking, Xưởng"""
+        time.sleep(60)
+        try:
+            sheet1, _ = self.get_sheets()
+            data1 = sheet1.get_all_values()
+            if len(data1) <= 1:
+                print("⚠️ Sheet1 không có đủ dữ liệu để tạo Sheet4.")
+                return
+            headers1 = data1[0]
+            idx_date = headers1.index("Order Date")
+            idx_status = headers1.index("Order Status")
+            idx_order = headers1.index("Order ID")
+            idx_custom = headers1.index("Number Checking")
+            idx_store = headers1.index("Store Name")
+            print('11111111111')
+
+            # Lấy dữ liệu Sheet2 từ cùng các sheet nguồn đã dùng copy
+            # Giả sử self.source_sheet_ids tồn tại
+            time.sleep(60)
+            # Tạo map order_id -> Status (cột F trước khi append Store Name)
+            status_map = {row[idx_order]: row[5] for row in sheet2_data[1:] if len(row) > 5}
+
+            # Lấy dữ liệu thiết kế MF, HOG, WEB
+            mf_sheet = self.client.open_by_key("1Y_EnKwWThJaxLaLQyAWGojCjcahJscZPCve5qHbwGIs").worksheet("CN")
+            shoes_sheet = self.client.open_by_key("1Y_EnKwWThJaxLaLQyAWGojCjcahJscZPCve5qHbwGIs").worksheet("Shoes")
+            hog_sheet = self.client.open_by_key("1jDZbTZzUG-_Sw3NXgKMjRa5YD9V3PjMkLlx78-w688Y").worksheet("3D(BY SELLER)")
+            hog_sheet_2d = self.client.open_by_key("1jDZbTZzUG-_Sw3NXgKMjRa5YD9V3PjMkLlx78-w688Y").worksheet("IN 2D (BY SELLER)")
+            tp_sheet = self.client.open_by_key("13agKuW62InJ_Sdj0qA5SmiHJYjiPFqguUllLjr3CzM4").worksheet("ORDER JERSEY")
+            web_sheet = self.client.open_by_key("1mCdTlRUw2OlNLBipZWycfP6CDhJ29DZBNF7zv2snoB4").worksheet("WEB")
+            web_sheet_c_nhung = self.client.open_by_key("1rzAqanj3oekf-b_jAyAQL9dXZ2b374aGLfz1-6mPomw").worksheet("FF")
+            cn_ids = {row[2]: True for row in mf_sheet.get_all_values()[1:] if len(row) > 2}
+            shoes_ids = {row[3]: True for row in shoes_sheet.get_all_values()[1:] if len(row) > 3}
+            hog_ids = {row[4]: True for row in hog_sheet.get_all_values()[1:] if len(row) > 4}
+            hog_id_2d = {row[4]: True for row in hog_sheet_2d.get_all_values()[1:] if len(row) > 4}
+            tp_id = {row[10]: True for row in tp_sheet.get_all_values()[1:] if len(row) > 4}
+            web_rows = {row[idx_order]: row[0] for row in web_sheet.get_all_values()[1:] if len(row) > idx_order}
+            web_row_c_nhung = {row[idx_order]: row[38] for row in web_sheet_c_nhung.get_all_values()[1:] if len(row) > idx_order}
+            
+            print('2222222222222222')
+            time.sleep(60)
+            # Chuẩn bị dữ liệu cho Sheet4
+            output = [["Order Date", "Order ID","Status Đơn Hàng", "Number Checking", "Store Name", "Status Checking", "Xưởng"]]
+            for row in data1[1:]:
+                oid = row[idx_order]
+                status = status_map.get(oid, "")
+                # Xác định xưởng
+                xuong = ""
+                if oid in shoes_ids or oid in cn_ids or oid in hog_ids or oid in hog_id_2d or oid in tp_id:
+                    if oid in shoes_ids or oid in cn_ids:
+                        xuong = "MF"
+                    if oid in hog_ids or oid in hog_id_2d:
+                        xuong = xuong + "- HOG" if xuong else "HOG"
+                    if oid in tp_id:
+                        xuong = xuong +  "- TP" if xuong else "TP"
+                else :
+                    if oid in web_rows :
+                       xuong = xuong + "-" + web_rows[oid] if xuong else web_rows[oid]
+                    elif oid in web_row_c_nhung :
+                       xuong = xuong + "-" + web_row_c_nhung[oid] if xuong else web_row_c_nhung[oid]
+                # if oid in shoes_ids or oid in cn_ids:
+                #     xuong = "MF"
+                # elif oid in hog_ids or oid in hog_id_2d:
+                #     xuong = xuong + "- HOG" if xuong else "HOG"
+                # elif oid in tp_id:
+                #     xuong = xuong +  "- TP" if xuong else "TP"
+                # elif oid in web_rows:
+                #     xuong = xuong + "-" + web_rows[oid] if xuong else web_rows[oid]
+                # else:
+                #     xuong = ""
+                output.append([row[idx_date], oid,row[idx_status], row[idx_custom], row[idx_store], status, xuong])
+
+            sheet = self.client.open_by_key(self.sheet_id)
+            print('333333333333')
+            time.sleep(60)
+            if "Tracking Auto" in [ws.title for ws in sheet.worksheets()]:
+                sheet4 = sheet.worksheet("Tracking Auto")
+                sheet4.clear()
+            else:
+                sheet4 = sheet.add_worksheet(title="Tracking Auto", rows=str(len(output)+10), cols="6")
+            sheet4.update(range_name = "A1:G1",values =  [output[0]])
+            sheet4.update(range_name = "A2:G{}".format(len(output)),values = output[1:])
+            print("✅ Đã tạo Sheet4 với cột Status Checking và Xưởng.")
+        except Exception as e:
+            print(f"❌ Lỗi khi tạo Sheet4: {e}")
+
 
     def extract_slug(self,url):
         remove_words = {"luxinshoes", "davidress", "onesimpler", "xanawood", "lovasuit", "luxinhoes","clomic"}
@@ -309,7 +474,7 @@ class GoogleSheetHandler:
         sheet1, sheet2 = self.get_sheets()
         data1 = sheet1.get_all_values()
         data2 = sheet2.get_all_values()
-
+        
         if len(data1) <= 1:
             print("Sheet nguồn không có dữ liệu.")
             return
@@ -497,9 +662,95 @@ class GoogleSheetHandler:
 
         # ✅ Xóa dữ liệu cũ và cập nhật dữ liệu mới
         sheet.clear()
-        sheet.append_rows([headers] + sorted_data)
+        batch_size = 500
+        sheet.clear()
+        sheet.update("A1", [headers])
+        
+
+
+        for i in range(0, len(sorted_data), batch_size):
+            batch = sorted_data[i:i+batch_size]
+            start_row = i + 2  # +2 vì header ở hàng 1
+            end_row = start_row + len(batch) - 1
+            num_cols = max(len(row) for row in batch)
+            end_col_letter = gspread.utils.rowcol_to_a1(1, num_cols).replace("1", "")
+            range_str = f"A{start_row}:{end_col_letter}{end_row}"  # Z là cột tùy chỉnh cho đủ rộng
+            sheet.update(range_str, batch)
+        # sheet.append_rows([headers] + sorted_data)
         
         print(f"✅ Đã sắp xếp Sheet theo cột {headers[sort_col]} (Ngày mới nhất -> cũ nhất).")
+    
+    def generate_sheet_ff(self):
+        """
+        Tạo / cập nhật sheet "FF":
+        - Kiểm tra Order ID đã tồn tại chưa, nếu có thì bỏ qua.
+        - Chỉ copy những hàng Order Status != 'failed'.
+        - Loại trừ 2 cột: 'factory' và 'Number Checking'.
+        - Thêm 6 cột mới (tất cả để trống): 
+        ['Classification', 'Link Template', 'Link Design',
+        'Xưởng', 'Has Design Link', 'Has FF']
+        """
+        # 1. Chuẩn bị dữ liệu
+        sheet1, _ = self.get_sheets()
+        data = sheet1.get_all_values()
+        if len(data) <= 1:
+            print("⚠️ Sheet1 không có dữ liệu hợp lệ để tạo FF.")
+            return
+
+        headers = data[0]
+        rows = data[1:]
+
+        # Xác định các chỉ số cột quan trọng
+        idx_order = headers.index("Order ID")
+        idx_status = headers.index("Order Status")
+
+        # Xác định các cột cần loại trừ (factory, Number Checking)
+        exclude_cols = {"factory", "Number Checking"}
+        cols_to_copy = [h for h in headers if h not in exclude_cols]
+
+        # 2. Lấy sheet FF (nếu chưa có thì tạo mới)
+        ss = self.client.open_by_key(self.sheet_id)
+        titles = [ws.title for ws in ss.worksheets()]
+        if "FF" in titles:
+            ff = ss.worksheet("FF")
+            existing = {r[1] for r in ff.get_all_values()[1:]}  # Order ID ở cột B
+        else:
+            ff = ss.add_worksheet(title="FF", rows="10000", cols=str(len(cols_to_copy) + 6))
+            existing = set()
+
+        # 3. Xây header cho FF: 
+        #    tất cả cols_to_copy + 6 cột mới
+        # new_headers = cols_to_copy + [
+        #     "Classification", "Link Template", "Link Design",
+        #     "Xưởng", "Has Design Link", "Has FF"
+        # ]
+        # ff.append_row(new_headers)
+
+        # 4. Duyệt mỗi dòng, lọc và append
+        to_append = []
+        for r in rows:
+            oid = r[idx_order]
+            status = r[idx_status].lower()
+            if oid in existing or status == "failed":
+                continue
+            # giữ lại chỉ các cột trong cols_to_copy
+            base = [r[headers.index(h)] for h in cols_to_copy]
+            # thêm 6 trường mới, khởi tạo "" 
+            base += [""] * 6
+            to_append.append(base)
+
+        if to_append:
+            self.add_rows_on_top("FF",to_append)
+            print(f"✅ Đã thêm {len(to_append)} hàng mới vào sheet FF.")
+        else:
+            print("⚠️ Không có hàng mới nào cần thêm vào FF.")
+        time.sleep(60)
+        print("✅ bắt đầu lưu công thức vào cột image" )
+        self.apply_formula_to_cells(ff,"AC")
+        time.sleep(60)
+        set_row_heights(ff, [('1:10000', 100)])  # Đặt chiều cao tất cả các hàng từ 1 đến 1000 là 100px
+        print("✅ Đã đặt chiều cao tất cả các hàng thành 100px")
+
 
     def apply_formula_to_cells(self, sheet, column_letter):
         """
