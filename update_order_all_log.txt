@@ -1,0 +1,259 @@
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 101, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 33, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 101, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 33, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 101, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 33, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 101, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 33, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 101, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 33, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 101, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 33, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 101, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 33, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\google_sheet.py", line 89, in copy_all_data_sheets
+    sheet = self.client.open_by_key(sheet_id)
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\site-packages\gspread\client.py", line 174, in open_by_key
+    raise ex
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\site-packages\gspread\client.py", line 168, in open_by_key
+    spreadsheet = Spreadsheet(self.http_client, {"id": key})
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\site-packages\gspread\spreadsheet.py", line 29, in __init__
+    metadata = self.fetch_sheet_metadata()
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\site-packages\gspread_formatting\functions.py", line 175, in fetch_sheet_metadata
+    r = self.client.request('get', url, params=params)
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\site-packages\gspread\http_client.py", line 128, in request
+    raise APIError(response)
+gspread.exceptions.APIError: APIError: [503]: The service is currently unavailable.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 103, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 34, in main
+    data = handler.copy_all_data_sheets(source_sheet_ids)
+  File "C:\Lay_link\linkDesign\google_sheet.py", line 107, in copy_all_data_sheets
+    print(f"L\u1ed7i khi l\u1ea5y d\u1eef li\u1ec7u t\u1eeb sheet {sheet_id}: {e}")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ed7' in position 1: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 103, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 35, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 103, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 35, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 104, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 35, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 104, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 35, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 104, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 35, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 105, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 36, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 105, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 36, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 105, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 36, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 105, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 36, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 105, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 36, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 105, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 36, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 105, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 36, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>

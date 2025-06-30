@@ -1,0 +1,198 @@
+{
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "@type": "Place",
+            "@id": "https://ovohoki.com/#place",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "2616 Loomis DR",
+                "addressLocality": "San Jose",
+                "addressRegion": "CA",
+                "postalCode": "95121",
+                "addressCountry": "US"
+            }
+        },
+        {
+            "@type": "Organization",
+            "@id": "https://ovohoki.com/#organization",
+            "name": "Ovohoki Store",
+            "url": "https://ovohoki.com",
+            "sameAs": [
+                "https://www.facebook.com/ovohoki.st/",
+                "https://twitter.com/ovohoki_st"
+            ],
+            "email": "support@ovohoki.com",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "2616 Loomis DR",
+                "addressLocality": "San Jose",
+                "addressRegion": "CA",
+                "postalCode": "95121",
+                "addressCountry": "US"
+            },
+            "logo": {
+                "@type": "ImageObject",
+                "@id": "https://ovohoki.com/#logo",
+                "url": "https://ovohoki.com/wp-content/uploads/2025/03/cropped-Flux_Dev_Design_a_whimsical_logo_for_ovohokicom_a_website_cent_2-removebg-preview.png",
+                "contentUrl": "https://ovohoki.com/wp-content/uploads/2025/03/cropped-Flux_Dev_Design_a_whimsical_logo_for_ovohokicom_a_website_cent_2-removebg-preview.png",
+                "caption": "Ovohoki Store",
+                "inLanguage": "en-US",
+                "width": "512",
+                "height": "512"
+            },
+            "contactPoint": [
+                {
+                    "@type": "ContactPoint",
+                    "telephone": "+1 (815) 515-6572",
+                    "contactType": "customer support"
+                }
+            ],
+            "location": {
+                "@id": "https://ovohoki.com/#place"
+            }
+        },
+        {
+            "@type": "WebSite",
+            "@id": "https://ovohoki.com/#website",
+            "url": "https://ovohoki.com",
+            "name": "Ovohoki Store",
+            "alternateName": "Ovohoki Store",
+            "publisher": {
+                "@id": "https://ovohoki.com/#organization"
+            },
+            "inLanguage": "en-US"
+        },
+        {
+            "@type": "ImageObject",
+            "@id": "https://trumpany.nyc3.digitaloceanspaces.com/astronaut-basketball-outer-space-planet-gifts-men-women-kids-hoodie-28-9s0nb-9usde.jpg",
+            "url": "https://trumpany.nyc3.digitaloceanspaces.com/astronaut-basketball-outer-space-planet-gifts-men-women-kids-hoodie-28-9s0nb-9usde.jpg",
+            "width": "200",
+            "height": "200",
+            "inLanguage": "en-US"
+        },
+        {
+            "@type": "ItemPage",
+            "@id": "https://ovohoki.com/product/astronaut-basketball-outer-space-planet-gifts-men-women-kids-hoodie-6373/#webpage",
+            "url": "https://ovohoki.com/product/astronaut-basketball-outer-space-planet-gifts-men-women-kids-hoodie-6373/",
+            "name": "Astronaut Basketball Outer Space Planet Gifts Men Women Kids Hoodie - ovohoki store",
+            "datePublished": "2025-06-17T06:59:44+00:00",
+            "dateModified": "2025-06-17T06:59:44+00:00",
+            "isPartOf": {
+                "@id": "https://ovohoki.com/#website"
+            },
+            "primaryImageOfPage": {
+                "@id": "https://trumpany.nyc3.digitaloceanspaces.com/astronaut-basketball-outer-space-planet-gifts-men-women-kids-hoodie-28-9s0nb-9usde.jpg"
+            },
+            "inLanguage": "en-US"
+        },
+        {
+            "@type": "Product",
+            "name": "Astronaut Basketball Outer Space Planet Gifts Men Women Kids Hoodie - ovohoki store",
+            "description": "Stay warm and stylish with our Classic Graphic Hoodie, designed for everyday comfort. Made from a high-quality cotton and polyester blend, this hoodie provides a soft and cozy feel while ensuring durability and long-lasting wear. Whether for casual outings, lounging at home, or layering up on chilly days, this hoodie is the perfect addition to your wardrobe.",
+            "sku": "909836",
+            "category": "By Clothing &gt; Hoodie",
+            "mainEntityOfPage": {
+                "@id": "https://ovohoki.com/product/astronaut-basketball-outer-space-planet-gifts-men-women-kids-hoodie-6373/#webpage"
+            },
+            "image": [
+                {
+                    "@type": "ImageObject",
+                    "url": "https://trumpany.nyc3.digitaloceanspaces.com/astronaut-basketball-outer-space-planet-gifts-men-women-kids-hoodie-28-9s0nb-9usde.jpg",
+                    "height": "",
+                    "width": ""
+                },
+                {
+                    "@type": "ImageObject",
+                    "url": "https://trumpany.nyc3.digitaloceanspaces.com/astronaut-basketball-outer-space-planet-gifts-men-women-kids-hoodie-29-z48bi-iowfy.png",
+                    "height": "",
+                    "width": ""
+                },
+                {
+                    "@type": "ImageObject",
+                    "url": "https://trumpany.nyc3.digitaloceanspaces.com/astronaut-basketball-outer-space-planet-gifts-men-women-kids-hoodie-35-oegr0-zpoix.png",
+                    "height": "",
+                    "width": ""
+                },
+                {
+                    "@type": "ImageObject",
+                    "url": "https://trumpany.nyc3.digitaloceanspaces.com/astronaut-basketball-outer-space-planet-gifts-men-women-kids-hoodie-30-35wud-7o70d.png",
+                    "height": "",
+                    "width": ""
+                },
+                {
+                    "@type": "ImageObject",
+                    "url": "https://trumpany.nyc3.digitaloceanspaces.com/astronaut-basketball-outer-space-planet-gifts-men-women-kids-hoodie-36-fyaw5-gj10n.png",
+                    "height": "",
+                    "width": ""
+                },
+                {
+                    "@type": "ImageObject",
+                    "url": "https://trumpany.nyc3.digitaloceanspaces.com/astronaut-basketball-outer-space-planet-gifts-men-women-kids-hoodie-31-3n6wn-szt2o.png",
+                    "height": "",
+                    "width": ""
+                },
+                {
+                    "@type": "ImageObject",
+                    "url": "https://trumpany.nyc3.digitaloceanspaces.com/astronaut-basketball-outer-space-planet-gifts-men-women-kids-hoodie-37-eydf3-c3gh0.png",
+                    "height": "",
+                    "width": ""
+                },
+                {
+                    "@type": "ImageObject",
+                    "url": "https://trumpany.nyc3.digitaloceanspaces.com/astronaut-basketball-outer-space-planet-gifts-men-women-kids-hoodie-32-jt8kg-ixdzo.png",
+                    "height": "",
+                    "width": ""
+                },
+                {
+                    "@type": "ImageObject",
+                    "url": "https://trumpany.nyc3.digitaloceanspaces.com/astronaut-basketball-outer-space-planet-gifts-men-women-kids-hoodie-38-rifen-aovoq.png",
+                    "height": "",
+                    "width": ""
+                },
+                {
+                    "@type": "ImageObject",
+                    "url": "https://trumpany.nyc3.digitaloceanspaces.com/astronaut-basketball-outer-space-planet-gifts-men-women-kids-hoodie-33-u3jrb-j9zpu.png",
+                    "height": "",
+                    "width": ""
+                },
+                {
+                    "@type": "ImageObject",
+                    "url": "https://trumpany.nyc3.digitaloceanspaces.com/astronaut-basketball-outer-space-planet-gifts-men-women-kids-hoodie-39-btjz1-yswl6.png",
+                    "height": "",
+                    "width": ""
+                },
+                {
+                    "@type": "ImageObject",
+                    "url": "https://trumpany.nyc3.digitaloceanspaces.com/astronaut-basketball-outer-space-planet-gifts-men-women-kids-hoodie-34-wur3l-5myxf.png",
+                    "height": "",
+                    "width": ""
+                },
+                {
+                    "@type": "ImageObject",
+                    "url": "https://trumpany.nyc3.digitaloceanspaces.com/astronaut-basketball-outer-space-planet-gifts-men-women-kids-hoodie-40-ufhhe-l2kwq.png",
+                    "height": "",
+                    "width": ""
+                }
+            ],
+            "offers": {
+                "@type": "AggregateOffer",
+                "lowPrice": "40.00",
+                "highPrice": "44.00",
+                "offerCount": "48",
+                "priceCurrency": "USD",
+                "availability": "http://schema.org/InStock",
+                "seller": {
+                    "@type": "Organization",
+                    "@id": "https://ovohoki.com/",
+                    "name": "Ovohoki Store",
+                    "url": "https://ovohoki.com",
+                    "logo": "https://ovohoki.com/wp-content/uploads/2025/03/cropped-Flux_Dev_Design_a_whimsical_logo_for_ovohokicom_a_website_cent_2-removebg-preview.png"
+                },
+                "url": "https://ovohoki.com/product/astronaut-basketball-outer-space-planet-gifts-men-women-kids-hoodie-6373/"
+            },
+            "color": "Beige, Black, Grey, Navy, Olive, White",
+            "@id": "https://ovohoki.com/product/astronaut-basketball-outer-space-planet-gifts-men-women-kids-hoodie-6373/#richSnippet"
+        }
+    ]
+}

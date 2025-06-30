@@ -75,7 +75,7 @@ class GoogleSheetHandler:
 
         # Ghi dữ liệu mới vào vùng vừa chèn
         sheet = self.client.open_by_key(self.sheet_id).worksheet(sheet_title)
-        sheet.update(f"A2", data_to_add)
+        sheet.update(range_name = f"A2",values=  data_to_add)
 
         print(f"✅ Đã chèn {num_rows_to_insert} hàng mới lên đầu sheet '{sheet_title}' và cập nhật dữ liệu.")
     
@@ -108,11 +108,50 @@ class GoogleSheetHandler:
 
         return all_data  # Trả về tất cả dữ liệu đã thu thập
     
+    def copy_all_data_sheets_date(self, sheet_ids,cutoff_date):
+        """Lấy dữ liệu từ danh sách các Google Sheet"""
+        all_data = []
+        for sheet_id in sheet_ids:
+            try:
+                sheet = self.client.open_by_key(sheet_id)
+                sheet_name = sheet.title  # Lấy tên của Google Sheet
+                worksheet = sheet.worksheet("Sheet1")
+                data = worksheet.get_all_values()  # Lấy tất cả dữ liệu của sheet
+                if data :
+                    headers = data[0]
+                    try:
+                        order_date_idx = headers.index("Order Date")
+                    except ValueError:
+                        print(f"'Order Date' không tồn tại trong sheet {sheet_name}")
+                        continue
+                    if all_data == []:  
+                        headers.append("Store Name")
+                        all_data.append(headers)
+                    for row in data[1:]:
+                        if len(row) <= order_date_idx:
+                            continue  # Bỏ qua nếu hàng không đủ cột
+
+                        order_date_str = row[order_date_idx]
+                        try:
+                            order_date = datetime.strptime(order_date_str, "%Y-%m-%dT%H:%M:%S")
+                            if  cutoff_date < order_date:
+                                row.append(sheet_name)
+                                all_data.append(row)
+                        except ValueError:
+                            continue  # Bỏ qua nếu không đúng định dạng
+                # Thêm tên sheet vào tất cả các hàng dữ liệu
+
+                # all_data.extend(data)
+            except Exception as e:
+                print(f"Lỗi khi lấy dữ liệu từ sheet {sheet_id}: {e}")
+
+        return all_data  # Trả về tất cả dữ liệu đã thu thập
+    
     def link_design_hog(seft,order_id,data_design_hog):
         try :
             for row in data_design_hog :
                 if len(row) > 4 and row[4] == order_id :
-                    if len(row) > 20 : return row[20]
+                    if len(row) > 20 : return row[21]
                     break
         except Exception as e:
             print(f"❌ Lỗi khi tìm Link Design cho Order ID {order_id}: {e}")
@@ -261,7 +300,7 @@ class GoogleSheetHandler:
             else:
                 sheet3 = sheet.add_worksheet(title="Sheet3", rows="10000", cols="15")
 
-            sheet3.update("A1", output)
+            sheet3.update(range_name = "A1",values = output)
             print("✅ Đã tạo Sheet3 đúng định dạng thiết kế chuẩn như ảnh bạn gửi.")
 
         except Exception as e:
@@ -284,6 +323,44 @@ class GoogleSheetHandler:
                         data.pop(0)
                         for row in data: row.append(sheet_name)
                 all_data.extend(data)
+            except Exception as e:
+                print(f"Lỗi khi lấy dữ liệu từ sheet2 {sheet_id}: {e}")
+        return all_data
+    
+    def copy_all_data_sheet2_date(self, sheet_ids,cutoff_date):
+        """Lấy dữ liệu từ Sheet2 của danh sách các Google Sheet"""
+        all_data = []
+        for sheet_id in sheet_ids:
+            try:
+                sheet = self.client.open_by_key(sheet_id)
+                sheet_name = sheet.title
+                worksheet = sheet.worksheet("Sheet2")
+                data = worksheet.get_all_values()
+                if data:
+                    headers = data[0]
+                    try:
+                        order_date_idx = headers.index("Order Date")
+                    except ValueError:
+                        print(f"'Order Date' không tồn tại trong sheet {sheet_name} (Sheet2)")
+                        continue
+
+                    if not all_data:
+                        headers.append("Store Name")
+                        all_data.append(headers)
+
+                    for row in data[1:]:
+                        if len(row) <= order_date_idx:
+                            continue
+
+                        order_date_str = row[order_date_idx]
+                        try:
+                            order_date = datetime.strptime(order_date_str, "%Y-%m-%dT%H:%M:%S")
+                            if cutoff_date < order_date:
+                                row.append(sheet_name)
+                                all_data.append(row)
+                        except ValueError:
+                            continue  # Bỏ qua nếu không đúng định dạng
+                # all_data.extend(data)
             except Exception as e:
                 print(f"Lỗi khi lấy dữ liệu từ sheet2 {sheet_id}: {e}")
         return all_data
@@ -508,7 +585,10 @@ class GoogleSheetHandler:
 
         design_sheet_hog = self.client.open_by_key("1jDZbTZzUG-_Sw3NXgKMjRa5YD9V3PjMkLlx78-w688Y")
         shee1_sheet_hog = design_sheet_hog.worksheet("3D(BY SELLER)")
-        data_design_hog = shee1_sheet_hog.get_all_values()
+        sheet_t6_sheet_hog = design_sheet_hog.worksheet("THÁNG 6-BY SELLER")
+        data_shee1 = shee1_sheet_hog.get_all_values()
+        data_sheet6 = sheet_t6_sheet_hog.get_all_values()
+        data_design_hog = data_shee1 + data_sheet6[1:]
 
         template_sheet_hog = self.client.open_by_key("1ctlPBJ6NvS2z59lJqHeNYyIvk3k1YSISO7CdIas0xjA")
         sheet1_template_hog = template_sheet_hog.worksheet("Sheet1")
@@ -532,7 +612,7 @@ class GoogleSheetHandler:
                     link_url = row[link_url_idx]
                     if order_status != "failed" and sku != "AODAU":
                         new_data.append([order_date,order_id,note,custom_name,custom_number,sku,store,type ,link_image,"",link_url])
-                sheet2.update("A1",new_data)
+                sheet2.update(range_name = "A1",values = new_data)
                 self.apply_formula_to_cells(sheet2,"J")
                 return
         else : 
@@ -664,7 +744,7 @@ class GoogleSheetHandler:
         sheet.clear()
         batch_size = 500
         sheet.clear()
-        sheet.update("A1", [headers])
+        sheet.update(range_name = "A1",values = [headers])
         
 
 
@@ -675,7 +755,7 @@ class GoogleSheetHandler:
             num_cols = max(len(row) for row in batch)
             end_col_letter = gspread.utils.rowcol_to_a1(1, num_cols).replace("1", "")
             range_str = f"A{start_row}:{end_col_letter}{end_row}"  # Z là cột tùy chỉnh cho đủ rộng
-            sheet.update(range_str, batch)
+            sheet.update(range_name = range_str,values = batch)
         # sheet.append_rows([headers] + sorted_data)
         
         print(f"✅ Đã sắp xếp Sheet theo cột {headers[sort_col]} (Ngày mới nhất -> cũ nhất).")
@@ -708,6 +788,9 @@ class GoogleSheetHandler:
         exclude_cols = {"factory", "Number Checking"}
         cols_to_copy = [h for h in headers if h not in exclude_cols]
 
+        # Xác định các cột cần loại trừ trong sheet Design (factory, Number Checking)
+        exclude_cols_ds = {"factory", "Number Checking","Order Status","Pay URL","Product Size","Product ID","Lineitem Sku","Shipping Address 1","Shipping Address 2","Shipping City","Shipping Zipcode","Shipping State","Shipping Country","BillingPhone","ShippingPhone","Email","Quantity","Shipping Total","Order Total","Unit Cost","Total cost",}
+        cols_to_copy_ds = [h for h in headers if h not in exclude_cols_ds]
         # 2. Lấy sheet FF (nếu chưa có thì tạo mới)
         ss = self.client.open_by_key(self.sheet_id)
         titles = [ws.title for ws in ss.worksheets()]
@@ -717,6 +800,13 @@ class GoogleSheetHandler:
         else:
             ff = ss.add_worksheet(title="FF", rows="10000", cols=str(len(cols_to_copy) + 6))
             existing = set()
+
+        if "DS" in titles:
+            ds = ss.worksheet("DS")
+            existing_ds = {r[1] for r in ds.get_all_values()[1:]}  # Order ID ở cột B
+        else:
+            ds = ss.add_worksheet(title="DS", rows="10000", cols=str(len(cols_to_copy_ds) + 4))
+            existing_ds = set()
 
         # 3. Xây header cho FF: 
         #    tất cả cols_to_copy + 6 cột mới
@@ -728,10 +818,11 @@ class GoogleSheetHandler:
 
         # 4. Duyệt mỗi dòng, lọc và append
         to_append = []
+        to_append_ds = []
         for r in rows:
             oid = r[idx_order]
             status = r[idx_status].lower()
-            if oid in existing or status == "failed":
+            if oid in existing or status == "failed" or status == "checkout-draft":
                 continue
             # giữ lại chỉ các cột trong cols_to_copy
             base = [r[headers.index(h)] for h in cols_to_copy]
@@ -739,18 +830,140 @@ class GoogleSheetHandler:
             base += [""] * 6
             to_append.append(base)
 
+        for r in rows:
+            oid = r[idx_order]
+            status = r[idx_status].lower()
+            if oid in existing_ds or status == "failed" or status == "checkout-draft":
+                continue
+            # giữ lại chỉ các cột trong cols_to_copy
+            base_ds = [r[headers.index(h)] for h in cols_to_copy_ds]
+            # thêm 6 trường mới, khởi tạo "" 
+            base_ds += [""] * 5
+            to_append_ds.append(base_ds)
+
         if to_append:
             self.add_rows_on_top("FF",to_append)
             print(f"✅ Đã thêm {len(to_append)} hàng mới vào sheet FF.")
         else:
             print("⚠️ Không có hàng mới nào cần thêm vào FF.")
+
+        time.sleep(60)
+        if to_append_ds:
+            self.add_rows_on_top("DS",to_append_ds)
+            print(f"✅ Đã thêm {len(to_append_ds)} hàng mới vào sheet DS.")
+        else:
+            print("⚠️ Không có hàng mới nào cần thêm vào DS.")
         time.sleep(60)
         print("✅ bắt đầu lưu công thức vào cột image" )
         self.apply_formula_to_cells(ff,"AC")
         time.sleep(60)
         set_row_heights(ff, [('1:10000', 100)])  # Đặt chiều cao tất cả các hàng từ 1 đến 1000 là 100px
+        set_row_heights(ds, [('1:10000', 100)])  # Đặt chiều cao tất cả các hàng từ 1 đến 1000 là 100px
         print("✅ Đã đặt chiều cao tất cả các hàng thành 100px")
 
+    def import_design(self):
+        """
+        Kiểm tra tất cả các hàng trong sheet DS.
+        Với mỗi hàng ở vị trí i (bắt đầu từ hàng 2) so sánh với cùng vị trí i của sheet FF.
+        Nếu ở FF cột 'Has Design Link' hoặc 'Has FF' đã là 'done', bỏ qua.
+        Nếu chưa, nhập giá trị 'Link Design' của DS vào 'Link Design' của FF
+        và cột 'Has Design Link' của FF điền 'done' và điền của giá trị note vào.
+        """
+        try:
+            ss = self.client.open_by_key(self.sheet_id)
+            # Lấy dữ liệu từ sheet DS và FF
+            if "DS" not in [ws.title for ws in ss.worksheets()]:
+                print("⚠️ Không tìm thấy sheet 'DS'.")
+                return
+            if "FF" not in [ws.title for ws in ss.worksheets()]:
+                print("⚠️ Không tìm thấy sheet 'FF'.")
+                return
+
+            sheet_ds = ss.worksheet("DS")
+            sheet_ff = ss.worksheet("FF")
+            data_ds = sheet_ds.get_all_values()
+            data_ff = sheet_ff.get_all_values()
+            if len(data_ds) <= 1 or len(data_ff) <= 1:
+                print("⚠️ Dữ liệu trong DS hoặc FF không đủ để xử lý.")
+                return
+
+            # Xác định chỉ số cột trong DS
+            headers_ds = data_ds[0]
+            try:
+                idx_link_design_ds = headers_ds.index("Link Design")
+                idx_not_ds = headers_ds.index("Note")
+            except ValueError:
+                print("❌ Không tìm thấy cột 'Order ID' hoặc 'Link Design' trong DS.")
+                return
+
+            # Xác định chỉ số cột trong FF
+            headers_ff = data_ff[0]
+            try:
+                idx_link_design_ff = headers_ff.index("Link Design")
+                idx_has_design_link_ff = headers_ff.index("Has Design Link")
+                idx_has_ff_ff = headers_ff.index("Has FF")
+                idx_not_ff = headers_ff.index("Note")
+            except ValueError:
+                print("❌ Không tìm thấy một hoặc nhiều cột cần thiết trong FF ('Order ID', 'Link Design', 'Has Design Link', 'Has FF').")
+                return
+
+            # Lấy số lượng hàng (bao gồm header) của hai sheet
+            num_rows_ds = len(data_ds)
+            num_rows_ff = len(data_ff)
+
+            # Ta sẽ duyệt i từ 1 đến min(num_rows_ds, num_rows_ff) - 1,
+            # tương ứng lần lượt là các hàng dữ liệu (bỏ qua header ở i=0)
+            max_i = min(num_rows_ds, num_rows_ff)
+
+            update_requests = []
+            for i in range(1, max_i):
+                row_ds = data_ds[i]
+                row_ff = data_ff[i]
+
+                # Lấy giá trị Link Design và Note từ DS (nếu có)
+                link_design_ds = row_ds[idx_link_design_ds].strip() if len(row_ds) > idx_link_design_ds else ""
+                note_ds = row_ds[idx_not_ds].strip() if len(row_ds) > idx_not_ds else ""
+
+                # Lấy trạng thái Has Design Link và Has FF từ FF (nếu có)
+                has_design_link = row_ff[idx_has_design_link_ff].strip() if len(row_ff) > idx_has_design_link_ff else ""
+                has_ff = row_ff[idx_has_ff_ff].strip() if len(row_ff) > idx_has_ff_ff else ""
+
+                # Nếu DS không có Link Design hoặc FF đã "done" thì bỏ qua
+                if not link_design_ds:
+                    continue
+                if has_design_link.lower() == "done" or has_ff.lower() == "done":
+                    continue
+
+                # Tính số dòng thực tế trong Google Sheets (1-based), header là dòng 1 => data hàng thứ i tương ứng row number i+1
+                row_number_ff = i + 1
+
+                # Chuyển idx_link_design_ff ... thành chữ cái cột (A, B, C, ...)
+                col_link_design_letter = gspread.utils.rowcol_to_a1(1, idx_link_design_ff + 1).replace("1", "")
+                col_has_design_letter = gspread.utils.rowcol_to_a1(1, idx_has_design_link_ff + 1).replace("1", "")
+                col_not_design_letter = gspread.utils.rowcol_to_a1(1, idx_not_ff + 1).replace("1", "")
+
+                # Thêm request để cập nhật 3 ô: Link Design, Has Design Link="done", Note
+                update_requests.append({
+                    "range": f"{col_link_design_letter}{row_number_ff}",
+                    "values": [[link_design_ds]]
+                })
+                update_requests.append({
+                    "range": f"{col_has_design_letter}{row_number_ff}",
+                    "values": [["done"]]
+                })
+                update_requests.append({
+                    "range": f"{col_not_design_letter}{row_number_ff}",
+                    "values": [[note_ds]]
+                })
+
+            # Thực hiện batch_update nếu có request
+            if update_requests:
+                sheet_ff.batch_update(update_requests)
+                print(f"✅ Đã cập nhật {len(update_requests)//3} hàng trong 'FF' với Link Design và đánh dấu 'done'.")
+            else:
+                print("⚠️ Không có hàng nào cần cập nhật trong 'FF'.")
+        except Exception as e:
+            print(f"❌ Lỗi khi import design: {e}")
 
     def apply_formula_to_cells(self, sheet, column_letter):
         """
