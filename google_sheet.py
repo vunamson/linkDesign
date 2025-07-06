@@ -274,7 +274,7 @@ class GoogleSheetHandler:
                     row[idx_order_total],
                 ])
             # ✅ Chuẩn bị dữ liệu Sheet3
-            output = [["Order Date", "Store Name", "Order ID", "Order Status", "Link URL", "Quantity", "Unit Cost", "Total Cost", "Shipping Total", "Order Total"]]
+            output = [["Order Date", "Store Name", "Order ID", "Order Status", "Link ULR", "Quantity", "Unit Cost", "Total Cost", "Shipping Total", "Order Total"]]
 
             for date in sorted(grouped.keys(), reverse=True):
                 stores = grouped[date]

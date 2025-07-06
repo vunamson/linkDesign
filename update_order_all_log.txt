@@ -257,3 +257,112 @@ Traceback (most recent call last):
     return codecs.charmap_encode(input,self.errors,encoding_table)[0]
            ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 106, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 37, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 108, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 38, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 108, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 38, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 108, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 38, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 109, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 39, in main
+    print("Vui lòng ch\u1ecdn ch\u1ee9c n\u0103ng:")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ecd' in position 11: character maps to <undefined>
+khoi dong chuong trinh ....
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\google_sheet.py", line 119, in copy_all_data_sheets_date
+    data = worksheet.get_all_values()  # L\u1ea5y t\u1ea5t c\u1ea3 d\u1eef li\u1ec7u c\u1ee7a sheet
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\site-packages\gspread\worksheet.py", line 485, in get_all_values
+    return self.get_values(
+           ~~~~~~~~~~~~~~~^
+        range_name=range_name,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+        return_type=return_type,
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\site-packages\gspread\worksheet.py", line 462, in get_values
+    return self.get(
+           ~~~~~~~~^
+        range_name=range_name,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+        return_type=return_type,
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\site-packages\gspread\worksheet.py", line 954, in get
+    response = self.client.values_get(
+        self.spreadsheet_id, get_range_name, params=params
+    )
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\site-packages\gspread\http_client.py", line 236, in values_get
+    r = self.request("get", url, params=params)
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\site-packages\gspread\http_client.py", line 128, in request
+    raise APIError(response)
+gspread.exceptions.APIError: APIError: [429]: Quota exceeded for quota metric 'Read requests' and limit 'Read requests per minute per user' of service 'sheets.googleapis.com' for consumer 'project_number:322156275508'.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Lay_link\linkDesign\main.py", line 109, in <module>
+    main()
+    ~~~~^^
+  File "C:\Lay_link\linkDesign\main.py", line 38, in main
+    data = handler.copy_all_data_sheets_date(source_sheet_ids,cutoff_date)
+  File "C:\Lay_link\linkDesign\google_sheet.py", line 146, in copy_all_data_sheets_date
+    print(f"L\u1ed7i khi l\u1ea5y d\u1eef li\u1ec7u t\u1eeb sheet {sheet_id}: {e}")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u1ed7' in position 1: character maps to <undefined>
