@@ -8,6 +8,7 @@ from google_sheet import GoogleSheetHandler
 def main():
     print('khoi dong chuong trinh ....')
     source_sheet_ids = [
+        "1GGFnHXapQZNGOh71qmQi5-OdCSYnfgewK1XHDhHu4Fc",
         "1AygotqSY58fHQgAEVVmnpO-REwJEVvqdpxGi9u1jsn4",
         "1UiOMmQPkMmq0tewpiCsmyrXx7qMwW6iE21GjqzHVO7c",
         "14KecG--oRcj5otgvFJ8Kl16D556L9Cz32K4I3TjyBRY",
@@ -28,12 +29,13 @@ def main():
         "1oTKNUs_3XRJ7GD4C8q5ay-1JjRub2wKdOF1HDFSXEo8",
         # "15sEghfR8L-_leRNhSz62K--jtWFZPn-ix6BH0MuLIB0" 
     ]  # Danh sách ID sheet nguồn
-    cutoff_date = datetime(2025, 6, 15)
-    destination_sheet_id = "1rzAqanj3oekf-b_jAyAQL9dXZ2b374aGLfz1-6mPomw"  # ID của sheet đích
+    cutoff_date = datetime(2025, 7, 1)
+    destination_sheet_id = "1NyeuIaWq_YlI0Safgq1rxvRr0L-d-IcOq1uojXHbYe0"  # ID của sheet đích
     # Khởi tạo GoogleSheetHandler
     handler = GoogleSheetHandler(destination_sheet_id)
     # Lấy dữ liệu từ nhiều Sheet1 của các file nguồn2
-    data = handler.copy_all_data_sheets(source_sheet_ids)
+    # data = handler.copy_all_data_sheets(source_sheet_ids)
+    data = handler.copy_all_data_sheets_date(source_sheet_ids,cutoff_date)
     print("Vui lòng chọn chức năng:")
     print("1: Cập nhật các sheet (logic cũ)")
     print("2: Import Design")
@@ -83,7 +85,8 @@ def main():
             time.sleep(60)
             handler.generate_sheet3()
             time.sleep(60)
-            sheet2_data = handler.copy_all_data_sheet2(source_sheet_ids)
+            sheet2_data = handler.copy_all_data_sheet2_date(source_sheet_ids,cutoff_date)
+            # sheet2_data = handler.copy_all_data_sheet2(source_sheet_ids)
             print("✅ Đã coppy sheet2 xong")
             time.sleep(60)
             handler.generate_sheet4(sheet2_data)
